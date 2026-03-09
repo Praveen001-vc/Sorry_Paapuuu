@@ -333,7 +333,7 @@
   </style>
 </head>
 <body>
-  <button class="sound-toggle" id="soundToggle" type="button" aria-label="Unmute background music" aria-pressed="false">
+  <button class="sound-toggle" id="soundToggle" type="button" aria-label="Mute background music" aria-pressed="true">
     <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M5 15h3l4 4V5L8 9H5z"></path>
       <path d="M16 9a5 5 0 0 1 0 6"></path>
@@ -578,11 +578,9 @@
       "Sillunu oru kadhal BGM _ south Indian BGM ringtone(MP3_160K).mp3",
       "Hayyoda x Remo BGM (TAMIL) _ Jenushan _ Anirudh(MP3_160K).mp3"
     ];
-    body.classList.add("music-muted");
-
     function updateSoundState() {
       if (!bgm || !soundToggle) return;
-      const muted = bgm.paused || bgm.muted;
+      const muted = bgm.muted;
       body.classList.toggle("music-muted", muted);
       soundToggle.setAttribute("aria-label", muted ? "Unmute background music" : "Mute background music");
       soundToggle.setAttribute("aria-pressed", String(!muted));
