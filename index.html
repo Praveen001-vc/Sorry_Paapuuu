@@ -610,6 +610,21 @@
       updateSoundState();
     }
 
+    async function startBackgroundMusicFromGesture() {
+      if (!bgm) return;
+      if (!bgm.getAttribute("src")) {
+        loadTrack(currentTrackIndex);
+      }
+      bgm.volume = 0.35;
+      bgm.muted = false;
+      try {
+        await bgm.play();
+      } catch (error) {
+        body.classList.add("music-muted");
+      }
+      updateSoundState();
+    }
+
     function setPull(value) {
       const next = Math.max(0, Math.min(value, limit));
       root.style.setProperty("--pull", next + "px");
@@ -633,6 +648,11 @@
       pulling = false;
       body.classList.remove("is-pulling");
       root.style.setProperty("--pull", "0px");
+      if (bgm && !bgm.paused) {
+        bgm.pause();
+        bgm.currentTime = 0;
+        updateSoundState();
+      }
     }
 
     rope.addEventListener("pointerdown", (e) => {
@@ -640,6 +660,7 @@
       pulling = true;
       startY = e.clientY;
       rope.setPointerCapture(e.pointerId);
+      startBackgroundMusicFromGesture();
     });
 
     rope.addEventListener("pointermove", (e) => {
