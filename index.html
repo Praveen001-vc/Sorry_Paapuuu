@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pull The Light | Sorry Paapuuu</title>
+  <meta name="description" content="A single-file apology page with a pull-rope lamp intro.">
+  <script>document.documentElement.classList.add("js");</script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;700&display=swap");
+    :root{
+      --bg:#180e13;--bg2:#24131b;--panel:rgba(53,29,39,.72);--line:rgba(255,255,255,.08);
+      --text:#fff7f5;--muted:#d3bdc4;--pink:#f7b4bd;--gold:#e8c98d;--shadow:0 28px 70px rgba(0,0,0,.32);
+      --r:28px;--pull:0px;--max:1120px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{
+      margin:0;min-height:100vh;font-family:"Manrope",sans-serif;color:var(--text);overflow-x:hidden;
+      background:
+        radial-gradient(circle at 18% 18%,rgba(247,180,189,.18),transparent 24%),
+        radial-gradient(circle at 82% 14%,rgba(232,201,141,.12),transparent 22%),
+        linear-gradient(180deg,#140c11 0%,#180e13 38%,#22131a 100%);
+    }
+    .js body:not(.is-open){overflow:hidden}
+    a{color:inherit;text-decoration:none}
+    .intro{
+      display:none;
+    }
+    .js .intro{
+      position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px;
+      background:
+        radial-gradient(circle at 28% 46%,rgba(232,201,141,.15),transparent 20%),
+        linear-gradient(180deg,rgba(12,8,10,.96),rgba(18,10,14,.98));
+      transition:opacity .85s ease,visibility .85s ease,transform .85s ease;
+    }
+    body.is-open .intro{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.02)}
+    .intro-grid,.page{
+      width:min(calc(100% - 8px),var(--max));
+      margin:auto;
+    }
+    .intro-grid{
+      display:grid;grid-template-columns:.95fr 1.05fr;gap:16px;
+    }
+    .glass,.card,.hero-copy,.hero-side{
+      position:relative;overflow:hidden;
+      border:1px solid var(--line);border-radius:var(--r);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02)),
+        linear-gradient(135deg,rgba(247,180,189,.06),transparent 34%),
+        var(--panel);
+      box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.04);
+      backdrop-filter:blur(18px);
+    }
+    .glass:before,.card:before,.hero-copy:before,.hero-side:before{
+      content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),transparent 38%);
+    }
+    .stage{
+      position:relative;min-height:560px;display:grid;place-items:center;overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 38%,rgba(232,201,141,.22),transparent 27%),
+        radial-gradient(circle at 50% 70%,rgba(247,180,189,.08),transparent 32%),
+        linear-gradient(180deg,rgba(72,37,49,.7),rgba(19,10,15,.96));
+    }
+    .stage:before{
+      content:"";position:absolute;inset:18px;border-radius:24px;pointer-events:none;
+      border:1px solid rgba(255,255,255,.04);
+      background:linear-gradient(180deg,rgba(255,255,255,.02),transparent 32%);
+    }
+    .stage:after{
+      content:"";position:absolute;left:50%;bottom:88px;width:260px;height:42px;transform:translateX(-50%);
+      border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.42),transparent 70%);
+      filter:blur(10px);pointer-events:none;
+    }
+    .lamp-wrap{position:relative;width:min(400px,84%);height:440px;display:grid;place-items:center;transform:translateY(-8px)}
+    .glow{
+      position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(24px);
+      background:radial-gradient(circle,rgba(255,243,208,.6) 0%,rgba(232,201,141,.36) 28%,rgba(247,180,189,.14) 48%,transparent 72%);
+      opacity:.34;transform:scale(.9);transition:.25s ease;
+    }
+    body.is-pulling .glow,body.is-open .glow{opacity:1;transform:scale(1.08)}
+    .lamp{position:relative;width:252px;height:346px;filter:drop-shadow(0 22px 34px rgba(0,0,0,.24))}
+    .shade{
+      position:absolute;top:24px;left:50%;width:196px;height:82px;transform:translateX(-50%);z-index:3;
+      border-radius:58% 58% 40% 40% / 88% 88% 28% 28%;
+      background:linear-gradient(180deg,#fffdf9,#f1e6d9 95%);
+      border:1px solid rgba(255,255,255,.16);
+      box-shadow:0 0 34px rgba(255,248,230,.22),inset 0 -10px 18px rgba(0,0,0,.08);
+    }
+    .shade:before{
+      content:"";position:absolute;left:24px;right:24px;top:12px;height:18px;border-radius:50%;
+      background:linear-gradient(180deg,rgba(255,255,255,.54),rgba(255,255,255,0));
+    }
+    .shade:after{
+      content:"";position:absolute;bottom:-10px;left:50%;width:18px;height:14px;transform:translateX(-50%);
+      border-radius:999px;background:linear-gradient(180deg,#f3eadf,#dbcab9);
+    }
+    .stem{
+      position:absolute;top:112px;left:50%;width:16px;height:168px;transform:translateX(-50%);z-index:2;
+      border-radius:999px;background:linear-gradient(180deg,#fff6ed,#e3d4c3);
+    }
+    .base{
+      position:absolute;left:50%;bottom:26px;width:128px;height:18px;transform:translateX(-50%);z-index:2;
+      border-radius:999px;background:linear-gradient(180deg,#f4ebe0,#d5c3b2);
+      box-shadow:0 12px 24px rgba(0,0,0,.18);
+    }
+    .lamp:after{
+      content:"";position:absolute;left:50%;bottom:14px;width:144px;height:26px;transform:translateX(-50%);
+      border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.34),transparent 70%);filter:blur(5px);
+    }
+    .rope{
+      position:absolute;top:70px;left:166px;width:34px;height:188px;padding:0;border:0;background:transparent;
+      cursor:grab;touch-action:none;z-index:1;
+    }
+    .rope:active{cursor:grabbing}
+    .rope:focus-visible{outline:2px solid var(--pink);outline-offset:6px;border-radius:16px}
+    .rope-line{
+      position:absolute;top:0;left:50%;width:2px;height:calc(108px + var(--pull));transform:translateX(-50%);
+      border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.56) 26%,rgba(232,201,141,.38) 100%);
+      transition:height .18s ease;
+    }
+    .rope-knob{
+      position:absolute;top:calc(108px + var(--pull) - 4px);left:50%;width:20px;height:20px;transform:translateX(-50%);
+      border-radius:50%;background:linear-gradient(135deg,#ffd39d,#e0a46b);box-shadow:0 0 0 10px rgba(232,201,141,.05),0 10px 24px rgba(0,0,0,.24);
+      transition:top .18s ease;
+    }
+    .stage-note{
+      position:absolute;left:18px;right:18px;bottom:18px;padding:16px 18px;border-radius:18px;border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));display:grid;grid-template-columns:1.15fr .85fr;gap:16px;color:var(--muted);font-size:15px;
+      backdrop-filter:blur(18px);box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .intro-copy{
+      padding:clamp(32px,4vw,60px);display:flex;flex-direction:column;justify-content:center;min-height:560px;
+      background:
+        radial-gradient(circle at top left,rgba(247,180,189,.12),transparent 28%),
+        linear-gradient(180deg,rgba(84,43,56,.8),rgba(43,23,31,.92));
+    }
+    .tag,.mini-tag{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;
+      background:rgba(247,180,189,.12);border:1px solid rgba(247,180,189,.16);color:#ffd7dc;
+      text-transform:uppercase;letter-spacing:.08em;font-size:12px;
+    }
+    .tag:before,.mini-tag:before{
+      content:"";width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor;
+    }
+    h1,h2,h3{margin:0;font-family:"Cormorant Garamond",serif;line-height:.95;letter-spacing:-.03em}
+    .intro-copy h1{font-size:clamp(72px,9vw,126px);max-width:5.4ch;margin-top:18px}
+    .lead,.copy{color:var(--muted);line-height:1.8}
+    .lead{font-size:17px;max-width:34rem;margin:18px 0 0}
+    .intro-points,.hero-notes,.promise-grid{display:grid;gap:14px}
+    .intro-points{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px}
+    .pill{
+      padding:18px;border-radius:22px;border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+    }
+    .pill strong{display:block;color:var(--gold);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    .pill span{display:block;margin-top:8px;line-height:1.6}
+    .site{
+      position:relative;z-index:1;transition:opacity .85s ease,transform .85s ease,filter .85s ease;
+    }
+    .js body:not(.is-open) .site{opacity:0;transform:translateY(28px) scale(.985);filter:blur(18px);pointer-events:none}
+    .topbar{
+      position:sticky;top:0;z-index:20;backdrop-filter:blur(18px);
+      background:linear-gradient(180deg,rgba(24,14,19,.9),rgba(24,14,19,.58));border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    .nav{
+      width:min(calc(100% - 32px),var(--max));margin:auto;padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;
+    }
+    .brand{display:inline-flex;align-items:center;gap:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:13px}
+    .brand-mark{
+      width:40px;height:40px;display:grid;place-items:center;border-radius:14px;border:1px solid var(--line);
+      background:linear-gradient(145deg,rgba(247,180,189,.18),rgba(232,201,141,.12));font:700 18px "Cormorant Garamond",serif;color:var(--pink)
+    }
+    .nav-links{display:flex;gap:20px;color:var(--muted);font-size:15px}
+    .page{padding:16px 0 56px}
+    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;padding-top:28px}
+    .hero-copy{padding:clamp(28px,4vw,56px);min-height:560px;display:flex;flex-direction:column;justify-content:space-between}
+    .hero-copy h1{font-size:clamp(64px,8vw,112px);max-width:8ch;margin-top:18px}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+    .btn,.btn-alt{
+      display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 22px;border-radius:999px;border:1px solid transparent;font-weight:700;
+      transition:transform .18s ease,background .18s ease,border-color .18s ease;
+    }
+    .btn{background:linear-gradient(135deg,#f7b4bd,#ffd7dc);color:#2a141a;box-shadow:0 18px 34px rgba(247,180,189,.22)}
+    .btn-alt{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.1)}
+    .btn:hover,.btn-alt:hover,.btn:focus-visible,.btn-alt:focus-visible{transform:translateY(-2px)}
+    .hero-notes{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px}
+    .note{padding:18px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    .note strong{display:block;color:var(--gold);font-size:18px}
+    .note span{display:block;margin-top:8px;color:var(--muted);line-height:1.6;font-size:14px}
+    .hero-side{padding:18px;display:grid;gap:16px}
+    .visual{
+      position:relative;min-height:360px;padding:20px;border-radius:24px;border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02)),linear-gradient(145deg,#311922,#1a0f14);
+      overflow:hidden;
+    }
+    .visual:before{content:"";position:absolute;inset:auto -60px -80px auto;width:220px;height:220px;background:radial-gradient(circle,rgba(247,180,189,.22),transparent 70%)}
+    .photo-frame{
+      position:absolute;inset:88px 20px 20px;border-radius:24px;overflow:hidden;border:1px solid var(--line);
+      background:#120b10;box-shadow:0 20px 40px rgba(0,0,0,.18)
+    }
+    .photo-frame:after{
+      content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,11,16,0) 45%,rgba(18,11,16,.32) 100%);
+      pointer-events:none
+    }
+    .photo-frame img{width:100%;height:100%;object-fit:cover;display:block}
+    .paper{
+      position:absolute;inset:88px 20px 20px;display:flex;align-items:center;justify-content:center;border-radius:24px;border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(247,180,189,.1),transparent 32%),linear-gradient(145deg,#40212c,#24141b);
+    }
+    .paper:before,.paper:after{
+      content:"";position:absolute;background:rgba(255,255,255,.07);border:1px solid var(--line);box-shadow:0 20px 40px rgba(0,0,0,.16)
+    }
+    .paper:before{width:220px;height:160px;border-radius:22px;transform:rotate(-8deg) translate(-18px,-12px)}
+    .paper:after{width:205px;height:145px;border-radius:22px;transform:rotate(8deg) translate(20px,20px)}
+    .heart{
+      position:relative;width:138px;height:120px;transform:rotate(-45deg);background:linear-gradient(135deg,#f39aa7,#ffd8dd);border-radius:22px;
+      box-shadow:0 16px 34px rgba(243,154,167,.3);z-index:1;animation:pulse 3s ease-in-out infinite
+    }
+    .heart:before,.heart:after{content:"";position:absolute;width:138px;height:120px;background:inherit;border-radius:50%}
+    .heart:before{top:-60px;left:0}.heart:after{top:0;left:60px}
+    @keyframes pulse{0%,100%{transform:rotate(-45deg) scale(1)}50%{transform:rotate(-45deg) scale(1.06)}}
+    .side-mini{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .mini{padding:18px;border-radius:22px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+    .mini span{display:block;color:var(--muted);font-size:14px}
+    .mini strong{display:block;margin-top:8px;font-size:17px}
+    section{padding-top:24px}
+    .head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:16px}
+    .head h2{font-size:clamp(42px,5vw,68px)}
+    .head .copy{max-width:34rem;margin:0}
+    .grid-2,.grid-3{display:grid;gap:16px}
+    .grid-2{grid-template-columns:.92fr 1.08fr}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .memory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .memory-card{
+      position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:24px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);box-shadow:var(--shadow)
+    }
+    .memory-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+    .memory-card:after{
+      content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,11,16,0) 42%,rgba(18,11,16,.38) 100%);
+      pointer-events:none
+    }
+    .memory-card:hover img{transform:scale(1.04)}
+    .card{padding:22px}
+    .card h3{font-size:34px}
+    .copy{font-size:16px}
+    .promise-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .promise strong{
+      display:inline-flex;width:fit-content;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#ffe1e5;
+      text-transform:uppercase;letter-spacing:.08em;font-size:12px
+    }
+    .contact{
+      padding:clamp(24px,4vw,40px);display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;
+      border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(135deg,rgba(247,180,189,.16),transparent 34%),linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      box-shadow:var(--shadow)
+    }
+    .contact h2{font-size:clamp(44px,6vw,76px);max-width:10ch}
+    .footer{margin-top:18px;color:var(--muted);font-size:14px}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;transition-delay:var(--d,0ms)}
+    .reveal.show{opacity:1;transform:none}
+    @media (max-width:980px){
+      .intro-grid,.hero,.grid-2,.contact{grid-template-columns:1fr}
+      .memory-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .intro-copy,.hero-copy,.stage{min-height:auto}
+      .stage{padding:28px 0 78px}
+    }
+    @media (max-width:760px){
+      .nav{flex-wrap:wrap;justify-content:center}
+      .nav-links{width:100%;justify-content:center;flex-wrap:wrap}
+      .intro-points,.hero-notes,.side-mini,.grid-3,.promise-grid,.memory-grid{grid-template-columns:1fr}
+      .intro-copy,.hero-copy,.hero-side,.card,.note,.mini,.pill{padding:18px}
+      .stage-note{left:12px;right:12px;bottom:12px;grid-template-columns:1fr}
+      .lamp-wrap{width:min(300px,88%);height:360px}
+      .glow{width:300px;height:300px}
+      .lamp{transform:scale(.8)}
+      .photo-frame{inset:74px 16px 16px}
+      .paper:before{width:180px;height:130px}
+      .paper:after{width:168px;height:118px}
+      .heart,.heart:before,.heart:after{width:108px;height:92px}
+      .heart:before{top:-46px}.heart:after{left:46px}
+    }
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*:before,*:after{animation:none!important;transition:none!important}
+      .reveal{opacity:1;transform:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="intro" id="intro">
+    <div class="intro-grid">
+      <section class="glass stage" aria-labelledby="introTitle">
+        <div class="lamp-wrap">
+          <div class="glow" aria-hidden="true"></div>
+          <div class="lamp">
+            <div class="shade"></div>
+            <button class="rope" id="rope" aria-label="Pull the rope to open the page">
+              <span class="rope-line" aria-hidden="true"></span>
+              <span class="rope-knob" aria-hidden="true"></span>
+            </button>
+            <div class="stem"></div>
+            <div class="base"></div>
+          </div>
+        </div>
+        <div class="stage-note">
+          <span id="introText">Pull the lamp rope gently and Paapuuu's page will open.</span>
+          <span>Drag down on mobile, or press Enter on keyboard.</span>
+        </div>
+      </section>
+      <section class="glass intro-copy">
+        <div>
+          <span class="tag">Private Intro</span>
+          <h1 id="introTitle">Pull the light.</h1>
+          <p class="lead">
+            A softer beginning felt right. Pull the lamp and the letter I made for Paapuuu will open with it.
+          </p>
+          <div class="intro-points">
+            <article class="pill"><strong>01</strong><span>Pull the cord.</span></article>
+            <article class="pill"><strong>02</strong><span>Let the light rise.</span></article>
+            <article class="pill"><strong>03</strong><span>Open the letter.</span></article>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="site">
+    <header class="topbar">
+      <nav class="nav">
+        <a class="brand" href="#home">
+          <span class="brand-mark">S</span>
+          <span>For Paapuuu</span>
+        </a>
+        <div class="nav-links">
+          <a href="#memories">Memories</a>
+          <a href="#letter">Letter</a>
+          <a href="#promise">Promise</a>
+          <a href="#end">For You</a>
+        </div>
+      </nav>
+    </header>
+
+    <div class="page">
+      <main>
+        <section class="hero" id="home">
+          <div class="hero-copy glass reveal">
+            <div>
+              <span class="tag">A sincere apology</span>
+              <h1>I'm truly sorry, Paapuuu.</h1>
+              <p class="lead">
+                I know I hurt you. I know words alone cannot fix everything. Still, I wanted to make
+                something gentle and honest for you, because you, Paapuuu, matter to me more than my pride ever should.
+              </p>
+              <div class="actions">
+                <a class="btn" href="#letter">Read my letter</a>
+                <a class="btn-alt" href="#promise">See my promise</a>
+              </div>
+            </div>
+            <div class="hero-notes">
+              <article class="note"><strong>I was wrong</strong><span>I am not here to defend it. I am here to admit it honestly.</span></article>
+              <article class="note"><strong>I miss us</strong><span>The quiet talks, the comfort, and the way you made everything softer.</span></article>
+              <article class="note"><strong>I still care</strong><span>Not in a dramatic way. In a steady, real, everyday way that still feels true.</span></article>
+            </div>
+          </div>
+
+          <aside class="hero-side glass reveal" style="--d:120ms;">
+            <div class="visual">
+              <span class="mini-tag">A memory for us</span>
+              <div class="photo-frame">
+                <img src="images/09C1266E-E210-4C27-9BA7-429A128B0880.png" alt="Featured memory photo">
+              </div>     
+            </div>
+            <div class="side-mini">
+              <article class="mini"><span>What this page means</span><strong>I cared enough to slow down and say this properly.</strong></article>
+              <article class="mini"><span>Why I made this</span><strong>I wanted Paapuuu to see something personal, soft, and real.</strong></article>
+            </div>
+          </aside>
+        </section>
+
+        <section id="memories">
+          <div class="head reveal">
+            <div>
+              <span class="tag">Paapuuu & Me</span>
+              <h2>These are the memories I wanted Paapuuu to see.</h2>
+            </div>
+            <p class="copy">I placed our photos into this page because every memory with Paapuuu deserves a beautiful space of its own.</p>
+          </div>
+          <div class="memory-grid">
+            <figure class="memory-card reveal"><img src="images/IMG_2499.JPEG" alt="Memory photo 1"></figure>
+            <figure class="memory-card reveal" style="--d:80ms;"><img src="images/1F44601C-3E5B-46DB-9BD8-D77992DB3F0E.png" alt="Memory photo 2"></figure>
+            <figure class="memory-card reveal" style="--d:140ms;"><img src="images/3337A178-7211-4BAB-BC50-55910DB1823D.png" alt="Memory photo 3"></figure>
+            <figure class="memory-card reveal" style="--d:200ms;"><img src="images/3541B564-3D80-4629-8802-3158213AD71C.png" alt="Memory photo 4"></figure>
+            <figure class="memory-card reveal"><img src="images/44D2FE01-9369-477F-BE17-E757DD3F36FB.JPEG" alt="Memory photo 5"></figure>
+            <figure class="memory-card reveal" style="--d:80ms;"><img src="images/7960E135-232B-482F-AF5D-6147BD801576.png" alt="Memory photo 6"></figure>
+            <figure class="memory-card reveal" style="--d:140ms;"><img src="images/E22256E0-311E-4F0D-AE1C-A1CD3B521086.png" alt="Memory photo 7"></figure>
+            <figure class="memory-card reveal" style="--d:200ms;"><img src="images/IMG_2499.JPEG" alt="Memory photo 8"></figure>
+          </div>
+        </section>
+
+        <section id="letter">
+          <div class="head reveal">
+            <div>
+              <span class="tag">My Letter</span>
+              <h2>Something I should have said better.</h2>
+            </div>
+            <p class="copy">Replace this sample text with your own apology. Keep it honest and simple.</p>
+          </div>
+          <div class="grid-2">
+            <article class="card reveal">
+              <h3>Dear Paapuuu,</h3>
+              <p class="copy">
+                I know I hurt you, Paapuuu, and I am deeply sorry. You deserved patience, care, and understanding
+                from me, and I failed to give that to you in that moment.
+              </p>
+              <p class="copy">
+                I am not writing this to force forgiveness. I am writing because what we have means too
+                much to leave behind careless words and silent regret.
+              </p>
+              <p class="copy">
+                If your heart allows it, I would love the chance to make things right, not only by saying
+                sorry, but by being better where it truly counts.
+              </p>
+            </article>
+            <article class="card reveal" style="--d:140ms;">
+              <h3>What I miss most</h3>
+              <p class="copy">
+                Your voice, your little reactions, our inside jokes, and the peace I felt just knowing
+                you were there. That space still feels like yours.
+              </p>
+              <h3 style="margin-top:22px;">What I hope for</h3>
+              <p class="copy">
+                One more conversation. One honest chance. One moment where I can show you that my apology
+                is more than beautiful words on a page.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="promise">
+          <div class="head reveal">
+            <div>
+              <span class="tag">My Promise</span>
+              <h2>If you let me, I will do better.</h2>
+            </div>
+            <p class="copy">Promises matter only when they become actions, so keep these real if you edit them.</p>
+          </div>
+          <div class="promise-grid">
+            <article class="card promise reveal">
+              <strong>Listen better</strong>
+              <h3 style="margin-top:14px;">I will hear your feelings before reacting with my ego.</h3>
+              <p class="copy">Real love needs patience. I want to respond with care, not defensiveness.</p>
+            </article>
+            <article class="card promise reveal" style="--d:120ms;">
+              <strong>Communicate clearly</strong>
+              <h3 style="margin-top:14px;">I will say what I feel honestly, before silence turns into distance.</h3>
+              <p class="copy">I do not want confusion to stand where clarity and tenderness should be.</p>
+            </article>
+            <article class="card promise reveal" style="--d:220ms;">
+              <strong>Respect your heart</strong>
+              <h3 style="margin-top:14px;">I will never treat your love like something guaranteed.</h3>
+              <p class="copy">You deserve consistency, reassurance, and the kind of effort that feels safe.</p>
+            </article>
+            <article class="card promise reveal" style="--d:320ms;">
+              <strong>Prove it quietly</strong>
+              <h3 style="margin-top:14px;">I know growth is shown over time, not in one emotional message.</h3>
+              <p class="copy">If I get another chance, I want my actions to speak more than this page does.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="end">
+          <div class="contact reveal">
+            <div>
+              <span class="tag">For You</span>
+              <h2>Thank you for being in my life.</h2>
+              <p class="copy">
+                Change the title, replace the sample letter, add her name, and then upload this single
+                `index.html` file to GitHub Pages for free hosting.
+              </p>
+            </div>
+            <a class="btn" href="#home">Back to top</a>
+          </div>
+          <div class="footer">I Miss U Paapuu💚🖤</div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const body = document.body;
+    const rope = document.getElementById("rope");
+    const introText = document.getElementById("introText");
+    const items = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18 });
+    items.forEach((item) => io.observe(item));
+
+    let pulling = false;
+    let startY = 0;
+    let opened = false;
+    const limit = 96;
+    const unlockAt = 74;
+
+    function setPull(value) {
+      const next = Math.max(0, Math.min(value, limit));
+      root.style.setProperty("--pull", next + "px");
+      body.classList.toggle("is-pulling", next > 8 && !opened);
+      return next;
+    }
+
+    function openPage() {
+      if (opened) return;
+      opened = true;
+      body.classList.remove("is-pulling");
+      body.classList.add("is-open");
+      root.style.setProperty("--pull", "88px");
+      introText.textContent = "The page is open.";
+      window.setTimeout(() => root.style.setProperty("--pull", "0px"), 420);
+    }
+
+    function resetPull() {
+      if (opened) return;
+      pulling = false;
+      body.classList.remove("is-pulling");
+      root.style.setProperty("--pull", "0px");
+    }
+
+    rope.addEventListener("pointerdown", (e) => {
+      if (opened) return;
+      pulling = true;
+      startY = e.clientY;
+      rope.setPointerCapture(e.pointerId);
+    });
+
+    rope.addEventListener("pointermove", (e) => {
+      if (!pulling || opened) return;
+      const distance = setPull(e.clientY - startY);
+      if (distance >= unlockAt) openPage();
+    });
+
+    rope.addEventListener("pointerup", resetPull);
+    rope.addEventListener("pointercancel", resetPull);
+    rope.addEventListener("lostpointercapture", resetPull);
+    rope.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openPage();
+      }
+    });
+  </script>
+</body>
+</html>
